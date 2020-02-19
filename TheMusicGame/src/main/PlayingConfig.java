@@ -1,10 +1,11 @@
 package main;
 
-public class PlayerInterface {
-	public static double speed = 2.0;
-	public static int musicDelaytime = 1000;		//millsecond
-	public static double perfectJudgeTime = 30.0;	//millsecond
-	public static double greatJudgeTime = 90.0;		//millsecond
-	public static int bpm = 162;
-	public static int combo = 500;
+public class PlayingConfig {
+	public static double speed = 1;				//has problem
+	public static int musicDelaytime = 250;		//millsecond
+	public static double perfectJudgeTime = 33.0;	//millsecond
+	public static double greatJudgeTime = 83.0;		//millsecond
+	public static int bpm = 60;
+	public static int combo = 10;
+	public static boolean autoPlay = true;
 }

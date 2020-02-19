@@ -21,22 +21,26 @@ public class Main extends Canvas implements ActionListener {
 	int roll[][] = new int[note.combo][2];
 	int width = gd.getDisplayMode().getWidth();
 	int height = gd.getDisplayMode().getHeight();
-	int fps = 0;
-	double initialSpeedPlace = 523;
+	int noteRunRange = (int) 3*height/4;
 	
-	musicStuff musicObject = new musicStuff();
+	int fps = 0;
+	double clickEffect = -1;
+	
+	MusicEngine musicObject = new MusicEngine();
 	String filePath = "TheLamentationsOfTheLostOne.wav";
 	
 	//-------------------play interface---------------------------- 
-	double speed = PlayerInterface.speed;
-	int musicDelaytime = PlayerInterface.musicDelaytime;
-	double perfectJudgeTime = PlayerInterface.perfectJudgeTime;
-	double greatJudgeTime = PlayerInterface.greatJudgeTime;
+	double speed = PlayingConfig.speed;
+	int musicDelaytime = PlayingConfig.musicDelaytime;
+	double perfectJudgeTime = PlayingConfig.perfectJudgeTime;
+	double greatJudgeTime = PlayingConfig.greatJudgeTime;
 	//-------------------------------------------------------------
 	
 	double perfectRange = (perfectJudgeTime/(1000.0/speed))*523.0;
 	double greatRange = (greatJudgeTime/(1000.0/speed))*523.0;
 	long startTime = System.currentTimeMillis();
+	long clickEffectTime = 0;
+	long clickEffectTime2 = 0;
 	
 	static int key = -1;
 	static boolean click = false;
@@ -48,14 +52,13 @@ public class Main extends Canvas implements ActionListener {
 		if(start)
 			return;
 		start = true;
-		System.out.println("start");
+		System.out.println("game start");
 		run();
 	}
 	
 	public void run() {
 		long time1 = System.currentTimeMillis();
 		while (start) {
-			
 			render();
 			fps++;
 			long time2 = System.currentTimeMillis();
@@ -78,11 +81,13 @@ public class Main extends Canvas implements ActionListener {
 			musicObject.playMusic(filePath);
 			musicStart = true;
 		}
+		
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
 			createBufferStrategy(3);
 			return;
 		}
+		
 		Graphics g = bs.getDrawGraphics();
 		
 		g.setColor(Color.BLACK);
@@ -99,24 +104,23 @@ public class Main extends Canvas implements ActionListener {
 		
 		for(int i=0; i<note.combo; i++) {
 			
-			//cauculate the place
+			//Calculate the place
 			long newTime = System.currentTimeMillis();
 			long playTime = newTime - startTime;
-			initialSpeedPlace = (((int)playTime)/(1000.0/speed))*523.0;
-			int intinitialSpeedPlace = (int)initialSpeedPlace;
+			int dynamicNoteRange = (int) ((((int)playTime)/(1000.0/speed))*noteRunRange);
 			
-			int noteHeight = note.notes[i][1] + intinitialSpeedPlace;
-			notePlace[i] = note.notes[i][1] + intinitialSpeedPlace;
+			int noteHeight = note.notes[i][1] + dynamicNoteRange;
+			notePlace[i] = note.notes[i][1] + dynamicNoteRange;
 			roll[i][0] = note.notes[i][0];
 			roll[i][1] = note.notes[i][2];
 			
 			//g.fillOval((400+100*(roll[i]+1)), noteHeight, 50, 50);
-			g.fillRect((100+100*(roll[i][0]+1)), noteHeight, 50 + (roll[i][1]-roll[i][0]) * 100, 50);
+			g.fillRect((100+100*(roll[i][0]+1)), noteHeight, 50 + (roll[i][1]-roll[i][0]) * 100, 10);
 			
-			System.out.println("i=" + i + " /roll=" + roll[i][0] + " /noteHeight=" + noteHeight);
+			//System.out.println("i=" + i + " /roll=" + roll[i][0] + " /noteHeight=" + noteHeight);
 			
-			//judgement
-			//judge line 523
+			//Judgment
+			//Judge line 
 			
 			if(click) {
 				for(int j=0; j<note.combo; j++) {
@@ -124,19 +128,33 @@ public class Main extends Canvas implements ActionListener {
 					if(notePlace[j]>judgeLinePos - (int)perfectRange && notePlace[j]<judgeLinePos + (int)perfectRange && roll[j][0] <= key && key <= roll[j][1]) {
 						System.out.println("perfect");
 						note.notes[j][1] = 1000;
+						
+						clickEffectTime = System.currentTimeMillis();
+						g.fillRect(250+(int) (100.0*clickEffect), 527, 50, 30);
 						key = -1;
 					}else if(notePlace[j]>judgeLinePos - (int)greatRange && notePlace[j]<judgeLinePos + (int)greatRange && roll[j][0] <= key && key <= roll[j][1]) {
 						System.out.println("great");
 						note.notes[j][1] = 1000;
+						
+						clickEffectTime = System.currentTimeMillis();
+						clickEffect = (roll[j][0] + roll[j][1])/2;
+						g.fillRect(250+(int) (100.0*clickEffect), 527, 50, 30);
+						
 						key = -1;
 					}
 					
 				}
-				//System.out.println("roll= " + roll);
-				//System.out.println("key= " + key[i]);
 				
 			}
 			
+			if(PlayingConfig.autoPlay) {
+				if(notePlace[i]>noteRunRange) {
+					note.notes[i][1] = noteRunRange;
+					note.notes[i][1] = 1000;
+					clickEffect = (roll[i][0] + roll[i][1])/2;
+					g.fillRect(250+(int) (100.0*clickEffect), 527, 50, 30);
+				}
+			}`	
 			
 			click = false;
 			//deleted note
@@ -145,7 +163,6 @@ public class Main extends Canvas implements ActionListener {
 			}
 		}
 		
-		//g.fillRect(0, 0, width, height);
 		bs.show();
 	}
 	
@@ -154,22 +171,20 @@ public class Main extends Canvas implements ActionListener {
 		Main main = new Main();
 		Typed type = new Typed();
 		
-		
 		frame.pack();
 		frame.setVisible(true);
 		frame.setSize(main.width,main.height);
-		//frame.setSize(100,100);
 		frame.setLocation(-10, 0);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(main);
 		frame.addKeyListener(type);
 		
 		main.start();
+		
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 }

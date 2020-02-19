@@ -37,7 +37,7 @@ public class Typed implements KeyListener {
 			Main.key = 5;
 			Main.click = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_K) {
+		if (e.getKeyCode() == KeyEvent.VK_L) {
 			Main.key = 6;
 			Main.click = true;
 		}

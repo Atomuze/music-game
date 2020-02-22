@@ -11,6 +11,9 @@ public class MusicEngine {
 	public void playMusic(String filePath) {
 		// TODO Auto-generated method stub
 		try {
+			
+			System.out.println("Music engine start");
+			
 			File music = new File(filePath);
 			
 			if(music.exists()) {
@@ -18,9 +21,9 @@ public class MusicEngine {
 				Clip clip = AudioSystem.getClip();
 				clip.open(audioInput);
 				clip.start();
-				System.out.println("music start play...");
+				System.out.println("Music start play...");
 			}else {
-				System.out.println("can't find file");
+				System.out.println("Can't find music file");
 			}
 		}catch(Exception e){
 			e.printStackTrace();

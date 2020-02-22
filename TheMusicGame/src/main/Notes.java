@@ -17,7 +17,7 @@ public class Notes extends JPanel {
 	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	//Main main = new Main();
 	int height = gd.getDisplayMode().getHeight();
-	int noteRunRange = (int) 3*height/4;
+	int noteRunRange = (int)height/2;
 	
 	double distanceBetweenOneBeats = (noteRunRange/(bpm/60)*speed);
 	int notes[][] = new int [combo][3];
@@ -26,7 +26,7 @@ public class Notes extends JPanel {
 	
 	Notes(){
 		
-		System.out.println("prepare notes : desing ");
+		System.out.println("Prepare notes : desing ");
 		
 		//-------------------note disign--------------------------------
 		
@@ -43,7 +43,7 @@ public class Notes extends JPanel {
 		
 		//-----------------------------------------------------------
 		
-		System.out.println("prepare notes : drawing...");
+		System.out.println("Prepare notes : drawing...");
 		
 		for(int i=0; i<combo; i++) {
 			

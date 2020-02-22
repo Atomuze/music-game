@@ -7,5 +7,5 @@ public class PlayingConfig {
 	public static double greatJudgeTime = 83.0;		//millsecond
 	public static int bpm = 60;
 	public static int combo = 10;
-	public static boolean autoPlay = true;
+	public static boolean autoPlay = false;
 }

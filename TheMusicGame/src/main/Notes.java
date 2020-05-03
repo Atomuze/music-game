@@ -2,31 +2,26 @@ package main;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-
 import javax.swing.JPanel;
 
 public class Notes extends JPanel {
 	
 	//---------------------------config---------------------------------
-	int bpm = PlayingConfig.bpm;
-	int combo = PlayingConfig.combo;
-	double speed = PlayingConfig.speed;
+	int bpm = GameValue.bpm;
+	int combo = GameValue.combo;
+	double speed = GameValue.speed;
+	int judgLine = GameValue.judgLine;
 	//------------------------------------------------------------------
-	
 
-	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-	//Main main = new Main();
-	int height = gd.getDisplayMode().getHeight();
-	int noteRunRange = (int)height/2;
-	
-	double distanceBetweenOneBeats = (noteRunRange/(bpm/60)*speed);
+	int noteRunRange = judgLine;
 	int notes[][] = new int [combo][3];
 	int roll[][] = new int[combo][2];
+	double distanceBetweenOneBeats = (noteRunRange/(bpm/60)*speed);
 	double distanceToJudgeLine[] = new double[combo];
 	
 	Notes(){
 		
-		System.out.println("Prepare notes : desing ");
+		System.out.println("Prepare notes : design");
 		
 		//-------------------note disign--------------------------------
 		
@@ -35,13 +30,13 @@ public class Notes extends JPanel {
 			roll[i][1] = 7;
 		}
 		
-		//-------------------------
+		//--------------------------------------------------------------
 		
 		for(int i=1; i<combo; i++) {
 			distanceToJudgeLine[i] = -i*distanceBetweenOneBeats;
 		}
 		
-		//-----------------------------------------------------------
+		//--------------------------------------------------------------
 		
 		System.out.println("Prepare notes : drawing...");
 		
